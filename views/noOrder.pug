@@ -1,0 +1,38 @@
+extends base
+
+//- It will create same element like a function
+mixin navItem(link, text, icon, active)
+    li(class=`${active ? 'side-nav--active' : ''}`)
+        a(href=`${link}`)
+            svg 
+                use(xlink:href=`/img/icons.svg#icon-${icon}`)
+            |   #{text}
+
+block content 
+    main.main.main--product
+        .user-view 
+            nav.user-view__menu
+                ul.side-nav 
+                    +navItem(`/account/${user.name}`, 'Account', 'settings')
+                    +navItem(`/account/${user.name}/my-products`, 'My orders', 'briefcase', true)
+
+                - if (user.role === 'admin')
+                    .admin-nav
+                        h5.admin-nav__heading Admin 
+                        ul.side-nav 
+                            +navItem('#', 'Manage products', 'map')
+                            +navItem('#', 'Manage user', 'users')
+                            +navItem('#', 'Manage orders', 'users')
+
+
+
+            .user-view__content 
+                .user-view__form-container 
+                    .user-view__heading 
+                        h2.heading-secondary.ma-bt-md Your Orders 
+                        span 🚫
+
+                    .user-view__noorder 
+                        h3.heading-tertiary There are no orders placed yet 
+                        a.btn.btn--green.btn--small(href='/') Continue Shopping
+

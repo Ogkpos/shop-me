@@ -1,0 +1,42 @@
+//- It extends the base file, use it and override its content.
+extends base
+
+//- It will create same element like a function
+mixin navItem(link, text, icon, active)
+    li(class=`${active ? 'side-nav--active' : ''}`)
+        a(href=`${link}`)
+            svg 
+                use(xlink:href=`/img/icons.svg#icon-${icon}`)
+            |   #{text}
+
+block content 
+    main.main.main--product
+        .user-view 
+            nav.user-view__menu
+                ul.side-nav 
+                    +navItem(`/account/${user.name}`, 'Account', 'settings')
+                    +navItem(`/account/${user.name}/my-products`, 'My orders', 'briefcase', true)
+
+            .user-view__content 
+                .user-view__form-container 
+                    .user-view__heading 
+                        h2.heading-secondary.ma-bt-md Your Orders  
+                        span 😎
+
+                    //- Pug built-in array
+
+                    each order in orders  
+                        .user-view__orders
+                            .user-view__order
+                                h3.heading-tertiary Order 
+                                    span= `#${order.id}`
+                                .data-time= `Placed on ${order.createdAt.toString().split(' ').splice(0,5).join(' ')}`
+
+                            .user-view__order-description 
+                                a(href=`/products/${order.product.slug}`)
+                                    img.order-image(src=`/img/products/${order.product.images}`, alt=`${order.product.name}`)
+
+                                .order__product-name= `${order.product.name}`
+                                .order__product-price= `Rs.${order.product.price}`
+
+
