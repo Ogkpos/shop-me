@@ -13,21 +13,30 @@ exports.getCheckoutSession = catchAsync(async (req, res, next) => {
 
   // 2) Create Checkout Session
   const session = await stripe.checkout.sessions.create({
+    mode: 'payment',
     payment_method_types: ['card'],
     success_url: `${req.protocol}://${req.get('host')}/?product=${
       req.params.productId
     }&user=${req.user.id}&price=${product.price}`,
-    // success_url: `${req.protocol}://${req.get('host')}/`,
     cancel_url: `${req.protocol}://${req.get('host')}/products/${product.slug}`,
     customer_email: req.user.email,
     client_reference_id: req.params.productId,
     line_items: [
       {
-        name: product.name,
-        description: product.description,
-        amount: product.price * 100,
-        currency: 'npr',
+        //name: product.name,
+        //description: product.description,
+        //amount: product.price * 100,
+        //currency: 'usd',
+        //quantity: 1,
         quantity: 1,
+        price_data: {
+          currency: 'usd',
+          unit_amount: product.price * 1000,
+          product_data: {
+            name: `${product.name} Product`,
+            description: `${product.description}`,
+          },
+        },
       },
     ],
   });
@@ -54,8 +63,9 @@ exports.createOrder = catchAsync(async (req, res, next) => {
   const users = await User.findById({ _id: user });
 
   // SEND EMAIL IN YOUR ADDRESS (After order)
-  const url = `https://shop-me-retro.onrender.com/account/${users.name}/my-orders`;
-  await new Email(users, url).sendOrderResponse();
+  //const url = `https://shop-me-ecommerce.onrender.com/account/${users.//name}/my-orders`;
+
+  //await new Email(users, url).sendOrderResponse();
 
   // Redirect to home page.
   res.redirect(`${req.protocol}://${req.get('host')}/`);

@@ -1,4 +1,4 @@
-  const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 const orderSchema = new mongoose.Schema({
   product: {
@@ -14,7 +14,7 @@ const orderSchema = new mongoose.Schema({
   price: {
     type: Number,
     require: [true, 'Order must have a price.'],
-  },  
+  },
   createdAt: {
     type: Date,
     default: Date.now(),
@@ -25,7 +25,7 @@ const orderSchema = new mongoose.Schema({
   },
 });
 
-// Populate user and tour data
+// Populate user and product data
 orderSchema.pre(/^find/, function (next) {
   this.populate('user').populate({
     path: 'product',
